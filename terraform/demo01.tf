@@ -14,8 +14,8 @@ resource "azurerm_resource_group" "core_infrastructure" {
 
 
 # create a virtual network
-resource "azurerm_virtual_network" "noc_network" {
-    name = "noc_root"
+resource "azurerm_virtual_network" "nocnetwork" {
+    name = "noc_network"
     address_space = ["10.1.0.0/16"]
     location = "West US"
     resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
@@ -25,7 +25,7 @@ resource "azurerm_virtual_network" "noc_network" {
 resource "azurerm_subnet" "demo_net_01" {
     name = "demo_01"
     resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
-    virtual_network_name = "${azurermcon_virtual_network.noc_network.name}"
+    virtual_network_name = "${azurerm_virtual_network.nocnetwork.name}"
     address_prefix = "10.1.75.0/24"
 }
 
@@ -57,8 +57,8 @@ resource "azurerm_network_interface" "demo_nic_01" {
 }
 
 # create storage account
-resource "azurerm_storage_account" "demostorage" {
-    name = "demostorage"
+resource "azurerm_storage_account" "smdemo01storage" {
+    name = "smdemo01storage"
     resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
     location = "westus"
     account_type = "Standard_LRS"
@@ -72,16 +72,16 @@ resource "azurerm_storage_account" "demostorage" {
 resource "azurerm_storage_container" "demostoragecontainer" {
     name = "vhd"
     resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
-    storage_account_name = "${azurerm_storage_account.demostorage.name}"
+    storage_account_name = "${azurerm_storage_account.smdemo01storage.name}"
     container_access_type = "private"
-    depends_on = ["azurerm_storage_account.demostorage"]
+    depends_on = ["azurerm_storage_account.smdemo01storage"]
 }
 
 # create virtual machine demo01
 resource "azurerm_virtual_machine" "demo01vm" {
     name = "l_demo01_vm"
     location = "West US"
-    resource_group_name = "${azurerm_resource_group.coe_infrastructure.name}"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
     network_interface_ids = ["${azurerm_network_interface.demo_nic_01.id}"]
     vm_size = "Standard_A0"
 
@@ -94,13 +94,13 @@ resource "azurerm_virtual_machine" "demo01vm" {
 
     storage_os_disk {
         name = "myosdisk"
-        vhd_uri = "${azurerm_storage_account.demostorage.primary_blob_endpoint}${azurerm_storage_container.demostoragecontainer.name}/myosdisk.vhd"
+        vhd_uri = "${azurerm_storage_account.smdemo01storage.primary_blob_endpoint}${azurerm_storage_container.demostoragecontainer.name}/myosdisk.vhd"
         caching = "ReadWrite"
         create_option = "FromImage"
     }
 
     os_profile {
-        computer_name = "hostname"
+        computer_name = "sfdemo01"
         admin_username = "steve"
         admin_password = "Boko812!"
     }
