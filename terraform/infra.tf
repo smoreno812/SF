@@ -55,3 +55,24 @@ resource "azurerm_network_interface" "demo_nic_01" {
         public_ip_address_id = "${azurerm_public_ip.public_ips.id}"
     }
 }
+
+# create storage account
+resource "azurerm_storage_account" "demostorage" {
+    name = "demostorage"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
+    location = "westus"
+    account_type = "Standard_LRS"
+
+    tags {
+        environment = "staging"
+    }
+}
+
+# create storage container
+resource "azurerm_storage_container" "demostoragecontainer" {
+    name = "vhd"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
+    storage_account_name = "${azurerm_storage_account.demostorage.name}"
+    container_access_type = "private"
+    depends_on = ["azurerm_storage_account.demostorage"]
+}
