@@ -11,3 +11,20 @@ resource "azurerm_resource_group" "core_infrastructure" {
     name = "control"
     location = "West US"
 }
+
+
+# create a virtual network
+resource "azurerm_virtual_network" "noc_network" {
+    name = "noc_root"
+    address_space = ["10.1.0.0/16"]
+    location = "West US"
+    resource_group_name = "${azurerm_resource_group.helloterraform.name}"
+}
+
+# create subnet
+resource "azurerm_subnet" "configuration_mgmt" {
+    name = "config_mgmt_01"
+    resource_group_name = "${azurerm_resource_group.helloterraform.name}"
+    virtual_network_name = "${azurermcon_virtual_network.helloterraformnetwork.name}"
+    address_prefix = "10.1.0.0/24"
+}
