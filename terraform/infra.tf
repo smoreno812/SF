@@ -18,13 +18,40 @@ resource "azurerm_virtual_network" "noc_network" {
     name = "noc_root"
     address_space = ["10.1.0.0/16"]
     location = "West US"
-    resource_group_name = "${azurerm_resource_group.helloterraform.name}"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
 }
 
-# create subnet
-resource "azurerm_subnet" "configuration_mgmt" {
-    name = "config_mgmt_01"
-    resource_group_name = "${azurerm_resource_group.helloterraform.name}"
-    virtual_network_name = "${azurermcon_virtual_network.helloterraformnetwork.name}"
-    address_prefix = "10.1.0.0/24"
+# create demo subnet
+resource "azurerm_subnet" "demo_net_01" {
+    name = "demo_01"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
+    virtual_network_name = "${azurermcon_virtual_network.noc_network.name}"
+    address_prefix = "10.1.75.0/24"
+}
+
+# create public IP for demo
+resource "azurerm_public_ip" "public_ips" {
+    name = "demo01_publicip"
+    location = "West US"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
+    public_ip_address_allocation = "dynamic"
+
+    tags {
+        environment = "TerraformDemo"
+    }
+}
+
+# create network interface
+resource "azurerm_network_interface" "demo_nic_01" {
+    name = "dni01"
+    location = "West US"
+    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
+
+    ip_configuration {
+        name = "democonfiguration01"
+        subnet_id = "${azurerm_subnet.demo_net_01.id}"
+        private_ip_address_allocation = "static"
+        private_ip_address = "10.1.75.5"
+        public_ip_address_id = "${azurerm_public_ip.public_ips.id}"
+    }
 }
