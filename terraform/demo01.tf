@@ -22,8 +22,8 @@ resource "azurerm_virtual_machine" "demo01vm" {
 
     os_profile {
         computer_name = "sfdemo01"
-        admin_username = "steve"
-        admin_password = "Boko812!"
+        admin_username = "${var.admin_username}"
+        admin_password = "${var.admin_password}"
     }
 
     os_profile_linux_config {
