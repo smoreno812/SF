@@ -22,7 +22,7 @@ resource "azurerm_virtual_machine" "chef_server" {
     }
 
     os_profile {
-        computer_name = "sfdemo01"
+        computer_name = "chefserver"
         admin_username = "${var.admin_username}"
         admin_password = "${var.admin_password}"
     }
