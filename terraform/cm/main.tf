@@ -1,9 +1,10 @@
 # create virtual machine demo01
-resource "azurerm_virtual_machine" "demo01vm" {
-    name = "l_demo01_vm"
+
+resource "azurerm_virtual_machine" "chef_server" {
+    name = "chef"
     location = "West US"
-    resource_group_name = "${azurerm_resource_group.core_infrastructure.name}"
-    network_interface_ids = ["${azurerm_network_interface.demo_nic_01.id}"]
+    resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
+    network_interface_ids = ["${azurerm_network_interface.chef_svr_01.id}"]
     vm_size = "Standard_A0"
 
     storage_image_reference {
@@ -15,7 +16,7 @@ resource "azurerm_virtual_machine" "demo01vm" {
 
     storage_os_disk {
         name = "myosdisk"
-        vhd_uri = "${azurerm_storage_account.smdemo01storage.primary_blob_endpoint}${azurerm_storage_container.demostoragecontainer.name}/myosdisk.vhd"
+        vhd_uri = "${azurerm_storage_account.confmgmtstorage.primary_blob_endpoint}${azurerm_storage_container.cmstoragecontainer.name}/myosdisk.vhd"
         caching = "ReadWrite"
         create_option = "FromImage"
     }
