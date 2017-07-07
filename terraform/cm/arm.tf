@@ -9,7 +9,7 @@ provider "azurerm" {
 
 # create a resource group
 resource "azurerm_resource_group" "config_mgmt" {
-    name = "control"
+    name = "config_mgmt"
     location = "West US"
 }
 
