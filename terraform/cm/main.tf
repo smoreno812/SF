@@ -2,7 +2,7 @@
 
 resource "azurerm_virtual_machine" "chefserver" {
     name = "chef"
-    location = "West US"
+    location = "${var.region}"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
     network_interface_ids = ["${azurerm_network_interface.chef_svr_01.id}"]
     vm_size = "Standard_A0"
@@ -47,7 +47,7 @@ resource "azurerm_virtual_machine" "chefserver" {
 # Install Chef Manage Server
   provisioner "remote-exec" {
     inline = [
-      "sudo curl -O https://raw.githubusercontent.com/smoreno812/chef-services/master/files/installer.sh > /tmp/chefinstall.sh ",
+      "sudo curl https://raw.githubusercontent.com/smoreno812/chef-services/master/files/installer.sh > /tmp/chefinstall.sh",
       "sudo bash /tmp/chefinstall.sh -c ${azurerm_public_ip.chefserver.ip_address} -u ${var.admin_username} -p ${var.admin_password}" ,
     ]
   }

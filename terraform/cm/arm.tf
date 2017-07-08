@@ -10,14 +10,14 @@ provider "azurerm" {
 # create a resource group
 resource "azurerm_resource_group" "config_mgmt" {
     name = "config_mgmt"
-    location = "West US"
+    location = "${var.region}"
 }
 
 # create a virtual network
 resource "azurerm_virtual_network" "config_mgmt" {
     name = "cm_cidr"
     address_space = ["10.2.0.0/16"]
-    location = "West US"
+    location = "${var.region}"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
 }
 
@@ -31,9 +31,9 @@ resource "azurerm_subnet" "config_mgmt_01" {
 # create public IP for demo
 resource "azurerm_public_ip" "chefserver" {
     name = "chef"
-    location = "West US"
+    location = "${var.region}"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
-    public_ip_address_allocation = "dynamic"
+    public_ip_address_allocation = "static"
 
     tags {
         environment = "${var.environment}"
@@ -43,7 +43,7 @@ resource "azurerm_public_ip" "chefserver" {
 # create network interface
 resource "azurerm_network_interface" "chef_svr_01" {
     name = "dni01"
-    location = "West US"
+    location = "${var.region}"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
 
     ip_configuration {
@@ -59,7 +59,7 @@ resource "azurerm_network_interface" "chef_svr_01" {
 resource "azurerm_storage_account" "confmgmtstorage" {
     name = "confmgmtstorage"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
-    location = "westus"
+    location = "${var.region}"
     account_type = "Standard_LRS"
 
     tags {

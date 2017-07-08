@@ -8,3 +8,4 @@ variable "admin_username"  {}
 variable "admin_password"  {}
 #Other
 variable "environment"     {}
+variable "region"          {}
