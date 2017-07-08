@@ -1,6 +1,6 @@
 # create virtual machine demo01
 
-resource "azurerm_virtual_machine" "chef_server" {
+resource "azurerm_virtual_machine" "chefserver" {
     name = "chef"
     location = "West US"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
@@ -32,23 +32,23 @@ resource "azurerm_virtual_machine" "chef_server" {
     }
 
     tags {
-        environment = "staging"
+        environment = "${var.environment}"
     }
 
     # The default username for our AMI
     connection {
-      host        = "10.2.0.10"
+      host        = "${azurerm_public_ip.chefserver.ip_address}"
       type        = "ssh"
       user        = "${var.admin_username}"
       password    = "${var.admin_password}"
       timeout     = "2m"
       agent       = false
     }
-# INstall Chef Manage Server
+# Install Chef Manage Server
   provisioner "remote-exec" {
     inline = [
-      "curl -O https://raw.githubusercontent.com/smoreno812/chef-services/master/files/installer.sh > /tmp/chefinstall.sh ",
-      "sudo bash /tmp/chefinstall.sh -c ${azurerm_public_ip.public_ips.id} -u ${var.admin_username} -p ${var.admin_password}" ,
+      "sudo curl -O https://raw.githubusercontent.com/smoreno812/chef-services/master/files/installer.sh > /tmp/chefinstall.sh ",
+      "sudo bash /tmp/chefinstall.sh -c ${azurerm_public_ip.chefserver.ip_address} -u ${var.admin_username} -p ${var.admin_password}" ,
     ]
   }
 }

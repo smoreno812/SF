@@ -29,14 +29,14 @@ resource "azurerm_subnet" "config_mgmt_01" {
     address_prefix = "10.2.0.0/24"
 }
 # create public IP for demo
-resource "azurerm_public_ip" "public_ips" {
+resource "azurerm_public_ip" "chefserver" {
     name = "chef"
     location = "West US"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
     public_ip_address_allocation = "dynamic"
 
     tags {
-        environment = "config_mgmt"
+        environment = "${var.environment}"
     }
 }
 
@@ -51,7 +51,7 @@ resource "azurerm_network_interface" "chef_svr_01" {
         subnet_id = "${azurerm_subnet.config_mgmt_01.id}"
         private_ip_address_allocation = "static"
         private_ip_address = "10.2.0.10"
-        public_ip_address_id = "${azurerm_public_ip.public_ips.id}"
+        public_ip_address_id = "${azurerm_public_ip.chefserver.id}"
     }
 }
 
@@ -63,7 +63,7 @@ resource "azurerm_storage_account" "confmgmtstorage" {
     account_type = "Standard_LRS"
 
     tags {
-        environment = "config_mgmt"
+        environment = "${var.environment}"
     }
 }
 
