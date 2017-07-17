@@ -8,7 +8,7 @@ provider "azurerm" {
 }
 
 # create a resource group
-resource "azurerm_resource_group" "DR_WESTUS02_CMS_01" {
+resource "azurerm_resource_group" "DR_WESTUS02_SAS_01" {
     name = "${var.rname}"
     location = "${var.region}"
 }
@@ -27,21 +27,10 @@ resource "azurerm_subnet" "DR_NETWORK_01" {
     virtual_network_name = "${azurerm_virtual_network.DR_WESTUS_NET.name}"
     address_prefix = "${var.subnet}"
 }
-# create public IP for demo
-resource "azurerm_public_ip" "DR_PUBLIC_IP" {
-    name = "DR_PUBLIC_IP"
-    location = "${var.region}"
-    resource_group_name = "${var.rname}"
-    public_ip_address_allocation = "static"
-
-    tags {
-        environment = "${var.environment}"
-    }
-}
 
 # create storage account
-resource "azurerm_storage_account" "DRCMSSTORAGE" {
-    name = "drcmsstorage"
+resource "azurerm_storage_account" "DRSASSTORAGE" {
+    name = "drsasstorage"
     resource_group_name = "${var.rname}"
     location = "${var.region}"
     account_type = "Standard_LRS"
@@ -52,17 +41,17 @@ resource "azurerm_storage_account" "DRCMSSTORAGE" {
 }
 
 # create storage container
-resource "azurerm_storage_container" "DRCMSSTORAGE01" {
-    name = "drcmsvhd01"
+resource "azurerm_storage_container" "DRSASSTORAGE01" {
+    name = "drsasvhd01"
     resource_group_name = "${var.rname}"
-    storage_account_name = "${azurerm_storage_account.DRCMSSTORAGE.name}"
+    storage_account_name = "${azurerm_storage_account.DRSASSTORAGE.name}"
     container_access_type = "private"
-    depends_on = ["azurerm_storage_account.DRCMSSTORAGE"]
+    depends_on = ["azurerm_storage_account.DRSASSTORAGE"]
 }
-resource "azurerm_storage_container" "DRCMSSTORAGE02" {
-    name = "drcmsvhd02"
+resource "azurerm_storage_container" "DRSASSTORAGE02" {
+    name = "drsasvhd02"
     resource_group_name = "${var.rname}"
-    storage_account_name = "${azurerm_storage_account.DRCMSSTORAGE.name}"
+    storage_account_name = "${azurerm_storage_account.DRSASSTORAGE.name}"
     container_access_type = "private"
-    depends_on = ["azurerm_storage_account.DRCMSSTORAGE"]
+    depends_on = ["azurerm_storage_account.DRSASSTORAGE"]
 }
