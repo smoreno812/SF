@@ -31,8 +31,8 @@ resource "azurerm_network_interface" "vm_nic" {
     count = "${var.vm_count}"
 
     ip_configuration {
-        name = "${var.vm_name_prefix}-${count.index}-ipConfig"
-        subnet_id = "${azurerm_subnet.DR_NETWORK_01.id}"
+        name = "${var.vm_name_prefix}0${count.index}-ipConfig"
+        subnet_id = "${azurerm_subnet.DR_NETWORK_02.id}"
         private_ip_address_allocation = "dynamic"
         load_balancer_backend_address_pools_ids = ["${azurerm_lb_backend_address_pool.backend_pool.id}"]
         load_balancer_inbound_nat_rules_ids = ["${element(azurerm_lb_nat_rule.winrm_nat.*.id, count.index)}"]

@@ -21,7 +21,7 @@ resource "azurerm_virtual_network" "DR_WESTUS_NET" {
 }
 
 # create demo subnet
-resource "azurerm_subnet" "DR_NETWORK_01" {
+resource "azurerm_subnet" "DR_NETWORK_02" {
     name = "${var.subnet_name}"
     resource_group_name = "${var.rname}"
     virtual_network_name = "${azurerm_virtual_network.DR_WESTUS_NET.name}"
