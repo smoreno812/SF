@@ -5,7 +5,7 @@ resource "azurerm_virtual_machine" "chefserver" {
     location = "${var.region}"
     resource_group_name = "${azurerm_resource_group.config_mgmt.name}"
     network_interface_ids = ["${azurerm_network_interface.chef_svr_01.id}"]
-    vm_size = "Standard_A0"
+    vm_size = "Standard_D1_v2"
 
     storage_image_reference {
         publisher = "Canonical"
