@@ -72,6 +72,6 @@ resource "azurerm_virtual_machine" "virtual_machine" {
     }
 # Install Chef Manage Server
   provisioner "local-exec" {
-    command = "knife bootstrap windows winrm ${azurerm_public_ip.DR_PUBLIC_IP.id} -N ${var.vm_name_prefix}0${count.index} -x ${var.admin_username} -P ${var.admin_password} --node-ssl-verify-mode none --bootstrap-version ${var.chef_client_version} -r 'recipe[sf-application-cms]' --yes"
+    command = "knife bootstrap windows winrm ${azurerm_public_ip.DR_PUBLIC_IP.ip_address} -N ${var.vm_name_prefix}0${count.index} -x ${var.admin_username} -P ${var.admin_password} --node-ssl-verify-mode none --bootstrap-version ${var.chef_client_version} -r 'recipe[sf-application-cms]' --yes"
   }
 }
