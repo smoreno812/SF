@@ -24,7 +24,7 @@ resource "azurerm_lb_nat_rule" "rdp_nat" {
 
 # create network interface
 resource "azurerm_network_interface" "vm_nic" {
-    name = "${var.vm_name_prefix}-${count.index}-nic"
+    name = "${var.vm_name_prefix}0${count.index}-nic"
     location = "${var.region}"
     resource_group_name = "${var.rname}"
     network_security_group_id = "${azurerm_network_security_group.vm_security_group.id}"
@@ -42,7 +42,7 @@ resource "azurerm_network_interface" "vm_nic" {
 # create virtual machine DR CMS
 
 resource "azurerm_virtual_machine" "virtual_machine" {
-    name = "${var.vm_name_prefix}-${count.index}"
+    name = "${var.vm_name_prefix}0${count.index}"
     location = "${var.region}"
     resource_group_name = "${var.rname}"
     network_interface_ids = ["${element(azurerm_network_interface.vm_nic.*.id, count.index)}"]
@@ -61,7 +61,7 @@ resource "azurerm_virtual_machine" "virtual_machine" {
 
     storage_os_disk {
         name = "${var.vm_name_prefix}-${count.index}-osdisk"
-        vhd_uri = "${azurerm_storage_account.DRCMSSTORAGE.primary_blob_endpoint}${azurerm_storage_container.DRCMSSTORAGE01.name}/${var.vm_name_prefix}-${count.index}-osdisk.vhd"
+        vhd_uri = "${azurerm_storage_account.DRCMSSTORAGE.primary_blob_endpoint}${azurerm_storage_container.DRCMSSTORAGE01.name}/${var.vm_name_prefix}0${count.index}-osdisk.vhd"
         caching = "ReadWrite"
         create_option = "FromImage"
     }
